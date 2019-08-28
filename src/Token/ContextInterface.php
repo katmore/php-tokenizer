@@ -21,8 +21,10 @@ interface ContextInterface
     * @return int The ordinal position of the presently encountered token, where <i><code>1</code></i> is the first encountered token.
     */
    public function getTokenPos(): int;
+   
+   public function withReset() : self;
    /**
-    * Creates a Context object with a specified line number
+    * Clones the Context object and changes its line number
     *
     * @param int $lineNo The source code line number presently encountered by the tokenizer. Must be a value of 1 or greater.
     *
@@ -31,23 +33,23 @@ interface ContextInterface
     * @see \Katmore\Tokenizer\Token\Context::getLineNo()
     * @throws \InvalidArgumentException
     */
-   public function withLineNo(int $lineNo): Context;
+   public function withLineNo(int $lineNo): self;
 
    /**
-    * Creates a Context object with the instruction position incremented by one 
+    * Clones the Context object and increments its instruction position by one
     *
     * @return \Katmore\Tokenizer\Token\Context An identical Context object except for having the instruction position incremented by one.
     *
     * @see \Katmore\Tokenizer\Token\Context::getInstructionPos()
     */
-   public function withInstructionPosIncremented(): Context;
+   public function withInstructionPosIncremented(): self;
 
    /**
-    * Creates a Context object with the token position incremented by one 
+    * Clones the Context object and increments its token position by one
     *
     * @see \Katmore\Tokenizer\Token\Context::getTokenPos()
     *
-    * @return \Katmore\Tokenizer\Token\Context An identical Context object except for having the token position incremented by one.
+    * @return \Katmore\Tokenizer\Token\Context An indentical Context object except for having the token position incremented by one.
     */
-   public function withTokenPosIncremented(): Context;
+   public function withTokenPosIncremented(): self;
 }

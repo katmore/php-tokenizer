@@ -1,13 +1,13 @@
 <?php
-namespace Katmore\Tokenizer\Token;
+namespace Katmore\Tokenizer\Parser;
 
-interface CharBuilderInterface extends BuilderInterface {
+interface CharParserInterface extends 
+   TokenParserInterface
+{
    /**
-    * Specify the Context object for any Token object that will be created
+    * Sets the string token identifier
+    * 
+    * @param string The string token identifier value must be a string exactly one character in length.
     */
-   public function setContext(Context $context) : void;
-   /**
-    * Specify the CharIdentifier for the current Token object being created
-    */
-   public function setCharIdentifier(string $charIdentifier): void ;
+   public function setStringIdentifier(string $stringIdentifier): void;
 }

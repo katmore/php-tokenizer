@@ -1,57 +1,73 @@
 <?php
-namespace Katmore\Tokenizer\Token;
+namespace Katmore\Tokenizer\Parser;
 
+use Katmore\Tokenizer\Identifier\CharIdentifier;
 use Katmore\Tokenizer\Token;
 use Katmore\Tokenizer\Exception;
 
-class CharBuilder
-implements CharBuilderInterface
+class CharParser implements 
+   CharParserInterface
 {
-   
-   /**
-    *
-    * @var \Katmore\Tokenizer\Token\Context
-    */
-   private $context;
 
    /**
     *
-    * @var \Katmore\Tokenizer\Token\Identifier\Char|null
+    * @var \Katmore\Tokenizer\Identifier\CharIdentifier|null
     */
    private $char;
-   
+
+   /**
+    *
+    * @var \Katmore\Tokenizer\Token\ContextInterface
+    */
+   protected $context;
+
+   /**
+    *
+    * @param \Katmore\Tokenizer\Token\ContextInterface $context The Context object
+    */
+   public function __construct(Token\ContextInterface $context) {
+      $this->context = $context;
+   }
+
    /**
     * Start creating a new Token object representing a Char Identifier
     */
    public function createToken(): void {
       $this->char = null;
    }
-   
-   /**
-    * Specify the Context object for any Token object that will be created
-    */
-   public function setContext(Context $context) : void {
-      $this->context = $context;
+   public function withContext(Token\ContextInterface $context): self {
+      $parser = clone $this;
+      $parser->context = $context;
+      return $parser;
    }
-   /**
-    * Specify the CharIdentifier for the current Token object being created
-    */
-   public function setCharIdentifier(string $charIdentifier): void {
-      $this->char = new Identifier\Char($charIdentifier);
+   public function getContext(): Token\Context {
+      return $this->context;
    }
-   
+
+   /**
+    * @throws \Katmore\Tokenizer\Exception\InvalidArgumentException
+    */
+   public function setStringIdentifier(string $stringIdentifier): void {
+      $this->char = new CharIdentifier($stringIdentifier);
+
+      try {
+         $this->char = new CharIdentifier($stringIdentifier);
+      } catch (Exception\InvalidArgumentException $e) {
+         throw new Exception\InvalidArgumentException('string identifier: ' . $e->getMessage(), null, $e);
+      }
+
+      $this->context = $this->context->withTokenPosIncremented();
+   }
+
    /**
     * @throws \Katmore\Tokenizer\Exception\LogicException
-    * @see \Katmore\Tokenizer\Token\CharBuilder::setCharIdentifier()
-    * @see \Katmore\Tokenizer\Token\CharBuilder::setContext()
+    * @see \Katmore\Tokenizer\Parser\CharParser::setCharIdentifier()
+    * @see \Katmore\Tokenizer\Parser\CharParser::setContext()
     */
    public function getToken(): Token {
-      if ($this->char===null) {
-         throw new Exception\LogicException('CharIdentifier must be specified for each Token created');
+      if ($this->char === null) {
+         throw new Exception\LogicException('string identifier must be specified for each Token created');
       }
-      if ($this->context===null) {
-         throw new Exception\LogicException('Context must be specified at least one time');
-      }
-      return new Token($this->context,$this->char);
+      return new Token($this->context, $this->char);
    }
 }

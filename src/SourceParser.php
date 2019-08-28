@@ -1,10 +1,12 @@
 <?php
 namespace Katmore\Tokenizer;
 
-class SourceTokenizer implements TokenizerInterface {
-   
-   use TokenizerTrait;
-   
+class SourceParser implements 
+   Identifier\EnumeratorInterface
+{
+
+   use Identifier\EnumeratorTrait;
+
    /**
     *
     * @var string source
@@ -15,7 +17,7 @@ class SourceTokenizer implements TokenizerInterface {
     * @var string
     */
    private $flags;
-   
+
    /**
     * Builds a SourceTokenizer object
     *
@@ -27,8 +29,7 @@ class SourceTokenizer implements TokenizerInterface {
       $this->source = $source;
       $this->flags = $flags;
    }
-   
-   public function enumerateTokenIdentifiers() : array {
+   public function enumerateTokenIdentifiers(): array {
       return token_get_all($this->source, $this->flags);
    }
 }

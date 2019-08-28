@@ -1,64 +1,89 @@
 <?php
-namespace Katmore\Tokenizer\Token;
+namespace Katmore\Tokenizer;
 
-use Katmore\Tokenizer\Token;
-use Katmore\Tokenizer;
-use Katmore\Tokenizer\Exception;
+class Iterator implements 
+   \Iterator
+{
 
-class BuilderDirector {
-   
    /**
-    * @var \Katmore\Tokenizer\TokenizerInterface
+    * @var \Katmore\Tokenizer\Parser\IdentifierParserInterface
     */
-   private $tokenizer;
-   
+   private $identifierParser;
+
    /**
-    * @var \Katmore\Tokenizer\Token\CharBuilderInterface 
+    * @var \Katmore\Tokenizer\Parser\CharParserInterface 
     */
-   private $charBuilder;
-   
+   private $charParser;
+
    /**
-    * @var \Katmore\Tokenizer\Token\PtokBuilderInterface
+    * @var \Katmore\Tokenizer\Parser\PtokParserInterface
     */
-   private $ptokBuilder;
+   private $ptokParser;
+   public function rewind() {
+      if ($this->ptokParser !== null) {
+         $this->ptokParser = $this->ptokParser->withContext($this->ptokParser->getContext()
+            ->withReset());
+      }
+      if ($this->charParser !== null) {
+         $this->charParser = $this->charParser->withContext($this->charParser->getContext()
+            ->withReset());
+      }
+      $this->identifierParser->rewind();
+   }
+   public function current() {
+      return static::identifierParser2Token($this->identifierParser, $this->ptokParser, $this->charParser);
+   }
+   public function key() {
+      return $this->identifierParser->key();
+   }
+   public function next() {
+      return $this->identifierParser->next();
+   }
+   public function valid() {
+      return $this->identifierParser->valid();
+   }
+   protected static function identifierParser2Token(Parser\IdentifierParserInterface $identifierParser, Parser\PtokParserInterface &$ptokParser = null,
+      Parser\CharParserInterface &$charParser = null): ?Token {
+      if (null === ($tokenIdentifier = $identifierParser->current())) {
+         return null;
+      }
+      return Token::tokenIdentifier2Token($tokenIdentifier, $ptokParser, $charParser);
+   }
    
+
    /**
     * Construct a Token BuilderDirector object
     * 
-    * @param \Katmore\Tokenizer\TokenizerInterface $tokenizer
-    * @param \Katmore\Tokenizer\Token\CharBuilderInterface $charBuilder The CharBuilder object.
-    * @param \Katmore\Tokenizer\Token\PtokBuilderInterface $ptokBuilder The PtokBuilder object.
+    * @param \Katmore\Tokenizer\Parser\IdentifierParserInterface|string $source The PHP source representation.
+    *    The value may be an identifier parser object or a string. 
+    *    If the value is a string, it must be either a PHP source string, or a path to a PHP source file.
+    * <ul> 
+    *    <li><b>string $source</b> The PHP source to parse.</li>
+    *    <li><b>string $source</b> The path to the PHP source file to parse.</li>
+    *    <li><b>\Katmore\Tokenizer\Parser\IdentifierParserInterface $source</b> The identifier parser object.</li>
+    * </ul>  
+    * @param \Katmore\Tokenizer\Parser\CharParserInterface $charParser Optionally specify a CharParser object.
+    * @param \Katmore\Tokenizer\Parser\PtokParserInterface $ptokParser Optionally specify a PtokParser object.
     * 
     */
-   public function __construct(Tokenizer\TokenizerInterface $tokenizer, Token\CharBuilderInterface $charBuilder, Token\PtokBuilderInterface $ptokBuilder) {
-      $charBuilder->setContext($ptokBuilder->getContext());
-      $this->tokenizer = $tokenizer;
-      $this->charBuilder = $charBuilder;
-      $this->ptokBuilder = $ptokBuilder;
-   }
-   
-   public function build() :?Token {
-      if (null===($tokenIdentifier = $this->tokenizer->current())) {
-         return null;
+   public function __construct($source, Parser\PtokParserInterface $ptokParser = null, Parser\CharParserInterface $charParser = null) {
+      if (is_string($source)) {
+         if ($source === '' || false !== strpos('<?php', $source) || !is_file($source)) {
+            $source = new SourceParser($source);
+         } else {
+            $source = new FileParser($source);
+         }
       }
-      if (is_string($tokenIdentifier)) {
-         return static::buildCharToken($this->charBuilder, $tokenIdentifier);
-      }
-      if (is_array($tokenIdentifier)) {
-         $token = static::buildPtokToken($this->ptokBuilder, $tokenIdentifier);
-         $this->charBuilder->setContext($token->getContext());
-      }
-      throw new Exception\LogicException('current tokenizer element is not a valid token identifier');
-   }
 
-   protected static function buildCharToken(Token\CharBuilderInterface $builder, string $charIdentifier): Token {
-      $builder->createToken();
-      $builder->setCharIdentifier($charIdentifier);
-      return $builder->getToken();
-   }
-   protected static function buildPtokToken(Token\PtokBuilderInterface $builder, array $arrayIdentifier): Token {
-      $builder->createToken();
-      $builder->setArrayIdentifier($arrayIdentifier);
-      return $builder->getToken();
+      if (!$source instanceof Parser\IdentifierParserInterface) {
+         throw new Exception\InvalidArgumentException(
+            'source must be one of the following: (string) PHP source, (string) path to a PHP source file, or (' .
+            Parser\IdentifierParserInterface::class .
+            ') identifier parser object');
+      }
+
+      $this->identifierParser = $source;
+      $this->charParser = $charParser;
+      $this->ptokParser = $ptokParser;
    }
 }

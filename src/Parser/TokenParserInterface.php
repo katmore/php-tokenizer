@@ -1,20 +1,31 @@
 <?php
-namespace Katmore\Tokenizer\Token;
+namespace Katmore\Tokenizer\Parser;
 
-use Katmore\Tokenizer;
+use Katmore\Tokenizer\Token;
 
-interface BuilderInterface {
+interface TokenParserInterface
+{
+   
+   public function withContext(Token\ContextInterface $context) : self;
+   
+   /**
+    * Gets the Context object
+    *
+    * @return \Katmore\Tokenizer\Token\ContextInterface
+    */
+   public function getContext(): Token\ContextInterface;
+   
    /**
     * Get the current Token object being created
     * 
     * @return \Katmore\Tokenizer\Token The Token object.
     */
-   public function getToken(): Tokenizer\Token ;
-   
+   public function getToken(): Token;
+
    /**
     * Start creating a new Token object
     * 
     * @return void
     */
-   public function createToken(): void ;
+   public function createToken(): void;
 }

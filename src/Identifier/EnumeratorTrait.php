@@ -1,65 +1,66 @@
 <?php
-namespace Katmore\Tokenizer;
+namespace Katmore\Tokenizer\Identifier;
 
-trait TokenizerTrait {
+trait EnumeratorTrait
+{
    /**
     * @var int
     */
    private $position = 0;
-   
+
    /**
     * @var array|null
     */
-   private $identifiers;
-   
+   private $identifier;
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::enumerateTokenIdentifiers()
+    * @see \Katmore\Tokenizer\Identifier\EnumeratorInterface::enumerateTokenIdentifiers()
     */
-   abstract public function enumerateTokenIdentifiers() : array;
-   
+   abstract public function enumerateTokenIdentifiers(): array;
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::rewind()
+    * @see \Katmore\Tokenizer\Parser\IdentifierParserInterface::rewind()
     * @return void
     */
    public function rewind() {
       $this->position = 0;
    }
-   
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::current()
+    * @see \Katmore\Tokenizer\Parser\IdentifierParserInterface::current()
     * @return array|string|null
     */
    public function current() {
       if (!$this->valid()) {
          return null;
       }
-      return $this->identifiers[$this->position];
+      return $this->identifier[$this->position];
    }
-   
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::key()
+    * @see \Katmore\Tokenizer\Parser\IdentifierParserInterface::key()
     * @return int
     */
    public function key() {
       return $this->position;
    }
-   
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::next()
+    * @see \Katmore\Tokenizer\Parser\IdentifierParserInterface::next()
     * @return void
     */
    public function next() {
-      ++$this->position;
+      ++ $this->position;
    }
-   
+
    /**
-    * @see \Katmore\Tokenizer\TokenizerInterface::valid()
+    * @see \Katmore\Tokenizer\Parser\IdentifierParserInterface::valid()
     * @return bool
     */
    public function valid() {
-      if ($this->identifiers === null) {
-         $this->identifiers = $this->enumerateTokenIdentifiers();
+      if ($this->identifier === null) {
+         $this->identifier = $this->enumerateTokenIdentifiers();
       }
-      return isset($this->identifiers[$this->position]);
+      return isset($this->identifier[$this->position]);
    }
 }

@@ -1,8 +1,10 @@
 <?php
-namespace Katmore\Tokenizer\Token;
+namespace Katmore\Tokenizer\Parser;
 
-interface PtokBuilderInterface extends BuilderInterface {
-   
+interface PtokParserInterface extends 
+   TokenParserInterface
+{
+
    /**
     * Sets the array token identifier
     *
@@ -19,4 +21,5 @@ interface PtokBuilderInterface extends BuilderInterface {
     * @see token_get_all()
     */
    public function setArrayIdentifier(array $arrayIdentifier): void;
+
 }
