@@ -32,14 +32,14 @@ final class Context implements
    public function getTokenPos(): int {
       return $this->tokenPos;
    }
-   public function withReset() : self {
+   public function withReset() : ContextInterface {
       $context = clone $this;
       $context->lineNo = 0;
       $context->instructionPos = 0;
       $context->tokenPos = 0;
       return $context;
    }
-   public function withLineNo(int $lineNo): self {
+   public function withLineNo(int $lineNo): ContextInterface {
       if ($lineNo < 1) {
          throw new Exception\InvalidArgumentException('lineNo must be a value of 1 or greater');
       }
@@ -47,12 +47,12 @@ final class Context implements
       $context->lineNo = $lineNo;
       return $context;
    }
-   public function withInstructionPosIncremented(): self {
+   public function withInstructionPosIncremented(): ContextInterface {
       $context = clone $this;
       $context->instructionPos ++;
       return $context;
    }
-   public function withTokenPosIncremented(): self {
+   public function withTokenPosIncremented(): ContextInterface {
       $context = clone $this;
       $context->tokenPos ++;
       return $context;

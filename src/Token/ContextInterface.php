@@ -22,7 +22,7 @@ interface ContextInterface
     */
    public function getTokenPos(): int;
    
-   public function withReset() : self;
+   public function withReset() : ContextInterface;
    /**
     * Clones the Context object and changes its line number
     *
@@ -33,7 +33,7 @@ interface ContextInterface
     * @see \Katmore\Tokenizer\Token\Context::getLineNo()
     * @throws \InvalidArgumentException
     */
-   public function withLineNo(int $lineNo): self;
+   public function withLineNo(int $lineNo): ContextInterface;
 
    /**
     * Clones the Context object and increments its instruction position by one
@@ -42,7 +42,7 @@ interface ContextInterface
     *
     * @see \Katmore\Tokenizer\Token\Context::getInstructionPos()
     */
-   public function withInstructionPosIncremented(): self;
+   public function withInstructionPosIncremented(): ContextInterface;
 
    /**
     * Clones the Context object and increments its token position by one
@@ -51,5 +51,5 @@ interface ContextInterface
     *
     * @return \Katmore\Tokenizer\Token\Context An indentical Context object except for having the token position incremented by one.
     */
-   public function withTokenPosIncremented(): self;
+   public function withTokenPosIncremented(): ContextInterface;
 }
