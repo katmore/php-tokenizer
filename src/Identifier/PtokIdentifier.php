@@ -7,6 +7,8 @@ use Katmore\Tokenizer\Token\IdentifierInterface;
 final class PtokIdentifier implements 
    IdentifierInterface
 {
+   const IDENTIFIER_TYPE = 'parser token';
+   
    /**
     * @var int
     */
@@ -22,13 +24,18 @@ final class PtokIdentifier implements
     * @var string
     */
    private $name;
+   public function identifierType() : string {
+      return static::IDENTIFIER_TYPE;
+   }
+   
    public function __toString() {
       return $this->contents;
    }
    public function jsonSerialize() {
       return [
          'contents' => $this->contents,
-         'token' => $this->tokenValue
+         'type' => $this->tokenType,
+         'name' => $this->name,
       ];
    }
 

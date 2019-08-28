@@ -3,7 +3,7 @@ namespace Katmore\Tokenizer\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 
-use Katmore\Tokenizer\Token;
+use Katmore\Tokenizer\Identifier;
 use Katmore\Tokenizer\Exception;
 
 class CharTest extends TestCase {
@@ -21,7 +21,7 @@ class CharTest extends TestCase {
     */
    public function testInvalidCharString(string $invalidCharString) {
       $this->expectException(Exception\InvalidArgumentException::class);
-      new Token\Identifier\Char($invalidCharString);
+      new Identifier\CharIdentifier($invalidCharString);
       
    }
    
@@ -38,7 +38,7 @@ class CharTest extends TestCase {
     * @dataProvider validCharStringProvider
     */
    public function testValidCharString(string $charString) {
-      $char = new Token\Identifier\Char($charString);
+      $char = new Identifier\CharIdentifier($charString);
       $this->assertEquals($charString, $char->getCharString());
    }
    
@@ -47,7 +47,7 @@ class CharTest extends TestCase {
     * @depends testValidCharString
     */
    public function testToString(string $charString) {
-      $char = new Token\Identifier\Char($charString);
+      $char = new Identifier\CharIdentifier($charString);
       $string = (string) $char;
       $this->assertEquals($charString, $string);
    }
@@ -56,7 +56,7 @@ class CharTest extends TestCase {
     * @depends testValidCharString
     */
    public function testJsonSerialize(string $charString) {
-      $char = new Token\Identifier\Char($charString);
+      $char = new Identifier\CharIdentifier($charString);
       $json = json_encode($char);
       $this->assertEquals(json_encode($charString), $json);
    }

@@ -6,8 +6,6 @@ use Katmore\Tokenizer\Token;
 interface TokenParserInterface
 {
    
-   public function withContext(Token\ContextInterface $context) : self;
-   
    /**
     * Gets the Context object
     *

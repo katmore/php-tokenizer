@@ -1,5 +1,7 @@
 <?php
-namespace Katmore\Tokenizer;
+namespace Katmore\Tokenizer\Parser;
+
+use Katmore\Tokenizer\Identifier;
 
 class SourceParser implements 
    Identifier\EnumeratorInterface

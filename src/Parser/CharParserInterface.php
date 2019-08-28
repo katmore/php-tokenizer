@@ -1,9 +1,14 @@
 <?php
 namespace Katmore\Tokenizer\Parser;
 
+use Katmore\Tokenizer\Token\ContextInterface;
+
 interface CharParserInterface extends 
    TokenParserInterface
 {
+   
+   public function withContext(ContextInterface $context) : CharParserInterface;
+   
    /**
     * Sets the string token identifier
     * 

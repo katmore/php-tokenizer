@@ -1,7 +1,7 @@
 <?php
 namespace Katmore\Tokenizer\Token;
 
-interface ContextInterface
+interface ContextInterface extends \JsonSerializable
 {
    /**
     * Gets the line number

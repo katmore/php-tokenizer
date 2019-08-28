@@ -7,10 +7,16 @@ use Katmore\Tokenizer\Token\IdentifierInterface;
 final class CharIdentifier implements 
    IdentifierInterface
 {
+   const IDENTIFIER_TYPE = 'single character';
+   
    /**
     * @var string 
     */
    private $charString;
+   
+   public function identifierType() : string {
+      return static::IDENTIFIER_TYPE;
+   }
 
    /**
     * One character string value of the PHP token
@@ -27,6 +33,7 @@ final class CharIdentifier implements
    public function jsonSerialize() {
       return $this->charString;
    }
+   
 
    /**
     * Constructs a Char Identifier object

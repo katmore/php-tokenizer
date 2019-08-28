@@ -35,12 +35,12 @@ class CharParser implements
    public function createToken(): void {
       $this->char = null;
    }
-   public function withContext(Token\ContextInterface $context): self {
+   public function withContext(Token\ContextInterface $context): CharParserInterface {
       $parser = clone $this;
       $parser->context = $context;
       return $parser;
    }
-   public function getContext(): Token\Context {
+   public function getContext(): Token\ContextInterface {
       return $this->context;
    }
 

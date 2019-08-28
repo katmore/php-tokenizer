@@ -2,54 +2,18 @@
 namespace Katmore\Tokenizer;
 
 class Iterator implements 
-   \Iterator
+   Token\IteratorInterface
 {
 
-   /**
-    * @var \Katmore\Tokenizer\Parser\IdentifierParserInterface
-    */
-   private $identifierParser;
-
-   /**
-    * @var \Katmore\Tokenizer\Parser\CharParserInterface 
-    */
-   private $charParser;
-
-   /**
-    * @var \Katmore\Tokenizer\Parser\PtokParserInterface
-    */
-   private $ptokParser;
-   public function rewind() {
-      if ($this->ptokParser !== null) {
-         $this->ptokParser = $this->ptokParser->withContext($this->ptokParser->getContext()
-            ->withReset());
-      }
-      if ($this->charParser !== null) {
-         $this->charParser = $this->charParser->withContext($this->charParser->getContext()
-            ->withReset());
-      }
-      $this->identifierParser->rewind();
-   }
+   use Token\IteratorTrait;
+   use Token\IdentifierConverterTrait;
+   use Parser\SourceConverterTrait;
    public function current() {
-      return static::identifierParser2Token($this->identifierParser, $this->ptokParser, $this->charParser);
-   }
-   public function key() {
-      return $this->identifierParser->key();
-   }
-   public function next() {
-      return $this->identifierParser->next();
-   }
-   public function valid() {
-      return $this->identifierParser->valid();
-   }
-   protected static function identifierParser2Token(Parser\IdentifierParserInterface $identifierParser, Parser\PtokParserInterface &$ptokParser = null,
-      Parser\CharParserInterface &$charParser = null): ?Token {
-      if (null === ($tokenIdentifier = $identifierParser->current())) {
-         return null;
+      if ($this->getIdentifierParser()!==null) {
+         return static::identifierParser2Token($this->getIdentifierParser(), $this->ptokParser, $this->charParser);
       }
-      return Token::tokenIdentifier2Token($tokenIdentifier, $ptokParser, $charParser);
    }
-   
+
 
    /**
     * Construct a Token BuilderDirector object
@@ -67,22 +31,7 @@ class Iterator implements
     * 
     */
    public function __construct($source, Parser\PtokParserInterface $ptokParser = null, Parser\CharParserInterface $charParser = null) {
-      if (is_string($source)) {
-         if ($source === '' || false !== strpos('<?php', $source) || !is_file($source)) {
-            $source = new SourceParser($source);
-         } else {
-            $source = new FileParser($source);
-         }
-      }
-
-      if (!$source instanceof Parser\IdentifierParserInterface) {
-         throw new Exception\InvalidArgumentException(
-            'source must be one of the following: (string) PHP source, (string) path to a PHP source file, or (' .
-            Parser\IdentifierParserInterface::class .
-            ') identifier parser object');
-      }
-
-      $this->identifierParser = $source;
+      $this->setIdentifierParser(static::source2IdentifierParser($source));
       $this->charParser = $charParser;
       $this->ptokParser = $ptokParser;
    }

@@ -1,5 +1,8 @@
 <?php
-namespace Katmore\Tokenizer;
+namespace Katmore\Tokenizer\Parser;
+
+use Katmore\Tokenizer\Identifier;
+use Katmore\Tokenizer\Exception;
 
 class FileParser implements 
    Identifier\EnumeratorInterface
@@ -27,7 +30,7 @@ class FileParser implements
     * @throws \Katmore\Tokenizer\Exception\RuntimeException fails to read path
     */
    public function __construct(string $path, int $flags = null) {
-      if (false === ($source = file($this->path, FILE_IGNORE_NEW_LINES))) {
+      if (false === ($source = file($path, FILE_IGNORE_NEW_LINES))) {
          throw new Exception\RuntimeException("failed to read path: $path");
       }
       $this->source = implode("\n", $source);

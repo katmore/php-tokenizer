@@ -1,9 +1,13 @@
 <?php
 namespace Katmore\Tokenizer\Parser;
 
+use Katmore\Tokenizer\Token\ContextInterface;
+
 interface PtokParserInterface extends 
    TokenParserInterface
 {
+   
+   public function withContext(ContextInterface $context) : PtokParserInterface;
 
    /**
     * Sets the array token identifier

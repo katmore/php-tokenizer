@@ -38,7 +38,7 @@ class PtokParser implements
    public function getContext(): Token\ContextInterface {
       return $this->context;
    }
-   public function withContext(Token\ContextInterface $context): self {
+   public function withContext(Token\ContextInterface $context): PtokParserInterface {
       $parser = clone $this;
       $parser->context = $context;
       return $parser;

@@ -23,6 +23,13 @@ final class Context implements
     * @var int The line number.
     */
    protected $lineNo = 0;
+   public function jsonSerialize() {
+      return [
+         'instruction'=>$this->instructionPos,
+         'token'=>$this->tokenPos,
+         'line'=>$this->lineNo,
+      ];
+   }
    public function getLineNo(): int {
       return $this->lineNo;
    }
