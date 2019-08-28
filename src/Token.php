@@ -1,7 +1,8 @@
 <?php
 namespace Katmore\Tokenizer;
 
-final class Token
+final class Token implements 
+   \JsonSerializable
 {
 
    /**
@@ -38,5 +39,10 @@ final class Token
       $this->context = $context;
       $this->identifier = $identifier;
    }
-   
+   public function jsonSerialize() {
+      return [
+         'context'=>$this->getContext(),
+         'token'=>$this->getIdentifier(),
+      ];
+   }
 }

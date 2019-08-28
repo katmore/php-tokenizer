@@ -57,6 +57,10 @@ class CharParser implements
       }
 
       $this->context = $this->context->withTokenPosIncremented();
+      
+      if ($stringIdentifier===';') {
+         $this->context = $this->context->withInstructionPosIncremented();
+      }
    }
 
    /**

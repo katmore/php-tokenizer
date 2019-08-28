@@ -14,9 +14,8 @@ class Iterator implements
       }
    }
 
-
    /**
-    * Construct a Token BuilderDirector object
+    * Constructs an Iterator object
     * 
     * @param \Katmore\Tokenizer\Parser\IdentifierParserInterface|string $source The PHP source representation.
     *    The value may be an identifier parser object or a string. 
