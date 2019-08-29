@@ -58,7 +58,7 @@ class CharParser implements
 
       $this->context = $this->context->withTokenPosIncremented();
       
-      if ($stringIdentifier===';') {
+      if (false!==strpos(self::INSTRUCTION_DELIM_CHARS,$stringIdentifier)) {
          $this->context = $this->context->withInstructionPosIncremented();
       }
    }

@@ -83,7 +83,8 @@ class PtokParser implements
       $this->context = $this->context->withTokenPosIncremented()
          ->withLineNo($lineNo);
 
-      if ($this->ptok->getTokenType() === T_CLOSE_TAG) {
+      //if ($this->ptok->getTokenType() === T_CLOSE_TAG) {
+      if (in_array($this->ptok->getTokenType(), self::INSTRUCTION_DELIM_TOKENS)) {
          $this->context = $this->context->withInstructionPosIncremented();
       }
    }

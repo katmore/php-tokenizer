@@ -6,6 +6,7 @@ use Katmore\Tokenizer\Token\ContextInterface;
 interface CharParserInterface extends 
    TokenParserInterface
 {
+   const INSTRUCTION_DELIM_CHARS = '};';
    
    public function withContext(ContextInterface $context) : CharParserInterface;
    

@@ -20,8 +20,7 @@ trait IteratorTrait
     * @var \Katmore\Tokenizer\Parser\PtokParserInterface
     */
    protected $ptokParser;
-   
-   protected function setIdentifierParser(Parser\IdentifierParserInterface $identifierParser) : void {
+   protected function setIdentifierParser(Parser\IdentifierParserInterface $identifierParser): void {
       $this->identifierParser = $identifierParser;
    }
    protected function getIdentifierParser(): ?Parser\IdentifierParserInterface {
@@ -49,5 +48,16 @@ trait IteratorTrait
    }
    public function valid() {
       return $this->identifierParser !== null ? $this->identifierParser->valid() : false;
+   }
+   public function __clone() {
+      if ($this->identifierParser !== null) {
+         $this->identifierParser = clone $this->identifierParser;
+      }
+      if ($this->charParser !== null) {
+         $this->charParser = clone $this->charParser;
+      }
+      if ($this->ptokParser !== null) {
+         $this->ptokParser = clone $this->ptokParser;
+      }
    }
 }

@@ -4,16 +4,18 @@ namespace Katmore\Tokenizer\Query;
 use Katmore\Tokenizer\Token;
 use Katmore\Tokenizer\Identifier;
 
-class ConstName
+class ConstNameQuery implements 
+   Token\QueryInterface
 {
-
+   use Token\QueryTrait;
    /**
     * @var string
     */
    private $constName;
-   public function first(Token\IteratorInterface $iterator): ?Token {
+   protected function currentMatch(Token\IteratorInterface &$iterator): ?Token {
       $const = null;
-      foreach ($iterator as $token) {
+      while ($iterator->valid()) {
+         $token = $iterator->current();
          $identifier = $token->getIdentifier();
          if ($identifier instanceof Identifier\PtokIdentifier) {
             $tokenType = $identifier->getTokenType();
@@ -29,10 +31,13 @@ class ConstName
                $const = $token;
             }
          }
+         $iterator->next();
       }
       return null;
    }
-   public function __construct(string $constName) {
+
+   public function __construct(Token\IteratorInterface $iterator, string $constName) {
+      $this->setIterator($iterator);
       $this->constName = $constName;
    }
 }

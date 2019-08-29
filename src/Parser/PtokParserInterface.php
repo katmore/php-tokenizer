@@ -6,7 +6,18 @@ use Katmore\Tokenizer\Token\ContextInterface;
 interface PtokParserInterface extends 
    TokenParserInterface
 {
-   
+   const INSTRUCTION_DELIM_TOKENS = [
+      T_OPEN_TAG,
+      T_OPEN_TAG_WITH_ECHO,
+      T_CLOSE_TAG,
+      T_CONST,
+      T_PUBLIC,
+      T_PRIVATE,
+      T_VAR,
+      T_CLASS,
+      T_DOC_COMMENT,
+      T_COMMENT,
+   ];
    public function withContext(ContextInterface $context) : PtokParserInterface;
 
    /**

@@ -28,6 +28,10 @@ final class Token implements
    public function getIdentifier(): Token\IdentifierInterface {
       return $this->identifier;
    }
+   
+   public function __toString() {
+      return $this->identifier->__toString();
+   }
 
    /**
     * Constructs a Token object
